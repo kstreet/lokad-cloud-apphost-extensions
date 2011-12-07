@@ -12,6 +12,7 @@ using Lokad.Cloud.AppHost.Framework;
 
 namespace Lokad.Cloud.AppHost.Extensions.FileDeployments
 {
+    [Serializable]
     public class FileDeploymentReader : IDeploymentReader
     {
         const string DeploymentHeadFileName = "currentdeployment.txt";
