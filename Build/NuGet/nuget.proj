@@ -1,0 +1,63 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="BuildPackages" ToolsVersion="4.0">
+	<UsingTask AssemblyFile="$(MSBuildProjectDirectory)/../MSBuild/MSBuild.Community.Tasks.dll" TaskName="MSBuild.Community.Tasks.XmlUpdate" />
+	<UsingTask AssemblyFile="$(MSBuildProjectDirectory)/../MSBuild/MSBuild.Community.Tasks.dll" TaskName="MSBuild.Community.Tasks.FileUpdate" />
+
+	<PropertyGroup>
+		<Root>$(MSBuildProjectDirectory)/../..</Root>
+		<OutNuGetPackages>$(MSBuildProjectDirectory)/out</OutNuGetPackages>
+		<FileDeploymentsOut>$(MSBuildProjectDirectory)/../../Source/FileDeployments/bin/Release</FileDeploymentsOut>
+		<FileDeploymentsPack>$(MSBuildProjectDirectory)/FileDeployments</FileDeploymentsPack>
+		<NuGetExe>$(MSBuildProjectDirectory)/../../Tools/nuget.exe</NuGetExe>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<FileDeploymentsNet40 Include="$(FileDeploymentsOut)/Lokad.Cloud.AppHost.Extensions.FileDeployments.dll;$(FileDeploymentsOut)/Lokad.Cloud.AppHost.Extensions.FileDeployments.pdb" />
+	</ItemGroup>
+	
+	<Target Name="CopyContentFiles">
+		<RemoveDir Directories="$(FileDeploymentsPack)/content" />
+		<RemoveDir Directories="$(FileDeploymentsPack)/lib" />
+		<Copy SourceFiles="@(FileDeploymentsNet40)" DestinationFolder="$(FileDeploymentsPack)/lib" />
+	</Target>
+
+	<Target Name="UpdateNuspec" DependsOnTargets="CopyContentFiles">
+	
+		<!-- Evaluate Assembly Identity -->
+		<GetAssemblyIdentity AssemblyFiles="$(FileDeploymentsOut)/Lokad.Cloud.AppHost.Framework.dll">
+			<Output TaskParameter="Assemblies" ItemName="FrameworkAssemblyInfo"/>
+		</GetAssemblyIdentity>
+		<GetAssemblyIdentity AssemblyFiles="$(FileDeploymentsPack)/lib/Lokad.Cloud.AppHost.Extensions.FileDeployments.dll">
+			<Output TaskParameter="Assemblies" ItemName="FileDeploymentsAssemblyInfo"/>
+		</GetAssemblyIdentity>
+		
+		<!-- Extract Assembly Versions -->
+		<PropertyGroup>
+			<FrameworkAssemblyVersion>%(FrameworkAssemblyInfo.Version)</FrameworkAssemblyVersion>
+			<FileDeploymentsAssemblyVersion>%(FileDeploymentsAssemblyInfo.Version)</FileDeploymentsAssemblyVersion>
+		</PropertyGroup>
+		
+		<!-- Package Versions (skip 4th part/build number, for semvar compliance) -->
+		<PropertyGroup>
+			<FrameworkPackVersion>$(FrameworkAssemblyVersion.Substring(0, $(FrameworkAssemblyVersion.LastIndexOf('.'))))</FrameworkPackVersion>
+			<FileDeploymentsPackVersion>$(FileDeploymentsAssemblyVersion.Substring(0, $(FileDeploymentsAssemblyVersion.LastIndexOf('.'))))</FileDeploymentsPackVersion>
+		</PropertyGroup>
+			
+		<XmlUpdate
+			Prefix="n" Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
+			XmlFileName="$(FileDeploymentsPack)/FileDeployments.nuspec"
+			XPath="//n:package/n:metadata/n:version"
+			Value="$(FileDeploymentsPackVersion)"/>
+		<XmlUpdate
+			Prefix="n" Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
+			XmlFileName="$(FileDeploymentsPack)/FileDeployments.nuspec"
+			XPath="//n:package/n:metadata/n:dependencies/n:dependency[@id='Lokad.Cloud.AppHost.Framework']/@version"
+			Value="$(FrameworkPackVersion)"/>
+	</Target>
+
+	<Target Name="BuildPackages" DependsOnTargets="UpdateNuspec">
+		<RemoveDir Directories="$(OutNuGetPackages)" />
+		<MakeDir Directories="$(OutNuGetPackages)" />
+		<Exec Command="$(NuGetExe) pack $(FileDeploymentsPack)/FileDeployments.nuspec /Verbose /OutputDirectory $(OutNuGetPackages)" />
+	</Target>
+
+</Project>
