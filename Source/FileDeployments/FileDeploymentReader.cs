@@ -90,8 +90,8 @@ namespace Lokad.Cloud.AppHost.Extensions.FileDeployments
             }
 
             return cellDirectory.EnumerateFiles("*.dll")
-                .Union(cellDirectory.EnumerateFiles("*.exe"))
-                .Union(cellDirectory.EnumerateFiles("*.pdb"))
+                .Concat(cellDirectory.EnumerateFiles("*.exe"))
+                .Concat(cellDirectory.EnumerateFiles("*.pdb"))
                 .Select(f => new Tuple<string, byte[]>(f.Name, File.ReadAllBytes(f.FullName)));
         }
 
