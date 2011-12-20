@@ -22,21 +22,25 @@ namespace App1
 
         public void Run(XElement settings, IDeploymentReader deploymentReader, IApplicationEnvironment environment, CancellationToken cancellationToken)
         {
-            _log.Write("[App1] {0} {1}: Started {2}", environment.CurrentDeploymentName, environment.CellName, DateTime.Now);
+            _log.WriteLine("[App1] {0} {1}: Started {2}", environment.CurrentDeploymentName, environment.CellName, DateTime.Now);
+            _log.Flush();
 
             while (!cancellationToken.IsCancellationRequested)
             {
-                _log.Write("[App1] {0} {1}: Timestamp {2}", environment.CurrentDeploymentName, environment.CellName, DateTime.Now);
+                _log.WriteLine("[App1] {0} {1}: Timestamp {2}", environment.CurrentDeploymentName, environment.CellName, DateTime.Now);
+                _log.Flush();
 
                 cancellationToken.WaitHandle.WaitOne(5000);
             }
 
-            _log.Write("[App1] {0} {1}: Stopped {2}", environment.CurrentDeploymentName, environment.CellName, DateTime.Now);
+            _log.WriteLine("[App1] {0} {1}: Stopped {2}", environment.CurrentDeploymentName, environment.CellName, DateTime.Now);
+            _log.Flush();
         }
 
         public void ApplyChangedSettings(XElement settings)
         {
-            _log.Write("[App1] SettingsChanged: {0}", settings);
+            _log.WriteLine("[App1] SettingsChanged: {0}", settings);
+            _log.Flush();
         }
     }
 }

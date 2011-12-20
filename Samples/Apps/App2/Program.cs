@@ -31,7 +31,11 @@ namespace App2
         void IApplicationEntryPoint.Run(XElement settings, IDeploymentReader deploymentReader, IApplicationEnvironment environment, CancellationToken cancellationToken)
         {
             var log = File.AppendText("app2_log.txt");
-            Run(cancellationToken, logtext => log.Write("[App1] {0} {1}: {2}", environment.CurrentDeploymentName, environment.CellName, logtext));
+            Run(cancellationToken, logtext =>
+                {
+                    log.WriteLine("[App1] {0} {1}: {2}", environment.CurrentDeploymentName, environment.CellName, logtext);
+                    log.Flush();
+                });
         }
 
         void IApplicationEntryPoint.ApplyChangedSettings(XElement settings)
