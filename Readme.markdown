@@ -35,3 +35,9 @@ File Structure:
 
   * **otherDeploymentName/**:  
     Directory of another deployment, named "otherDeploymentName"
+
+
+Samples
+=======
+
+  * **Apps**: Sample applications that provide an entry point and can be loaded in cells
