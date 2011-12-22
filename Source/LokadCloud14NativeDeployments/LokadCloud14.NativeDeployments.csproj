@@ -34,8 +34,9 @@
     <Reference Include="Ionic.Zip.Reduced">
       <HintPath>..\..\packages\DotNetZip.Reduced.1.9.1.8\lib\net20\Ionic.Zip.Reduced.dll</HintPath>
     </Reference>
-    <Reference Include="Lokad.Cloud.AppHost.Framework">
-      <HintPath>..\..\packages\Lokad.Cloud.AppHost.Framework.0.4.3\lib\Lokad.Cloud.AppHost.Framework.dll</HintPath>
+    <Reference Include="Lokad.Cloud.AppHost.Framework, Version=0.4.4.5, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Lokad.Cloud.AppHost.Framework.0.4.4\lib\Lokad.Cloud.AppHost.Framework.dll</HintPath>
     </Reference>
     <Reference Include="Lokad.Cloud.Storage">
       <HintPath>..\..\packages\Lokad.Cloud.Storage.1.6.1\lib\Lokad.Cloud.Storage.dll</HintPath>
