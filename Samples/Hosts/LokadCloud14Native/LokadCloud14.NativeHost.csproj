@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{EF66D6AE-F5E1-4109-845F-90243AAA38F4}</ProjectGuid>
+    <ProjectGuid>{4CB17EBC-4985-4AE8-9896-1618D1BCC8B6}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LocalFiles</RootNamespace>
-    <AssemblyName>LocalFiles</AssemblyName>
+    <RootNamespace>LokadCloud14.NativeHost</RootNamespace>
+    <AssemblyName>LokadCloud14.NativeHost</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -61,9 +61,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Source\FileDeployments\FileDeployments.csproj">
-      <Project>{62C0F5E8-89CB-4593-9090-5D33C6497690}</Project>
-      <Name>FileDeployments</Name>
+    <ProjectReference Include="..\..\..\Source\LokadCloud14NativeDeployments\LokadCloud14.NativeDeployments.csproj">
+      <Project>{65EE4C32-A66F-4FF0-9F13-952B7AA424AC}</Project>
+      <Name>LokadCloud14.NativeDeployments</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

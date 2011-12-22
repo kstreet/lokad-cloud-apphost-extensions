@@ -81,7 +81,7 @@ namespace LokadCloud14.NativeDeployments
                     }
 
                     var extension = Path.GetExtension(entry.FileName);
-                    if (extension != ".dll" || extension != ".pdb")
+                    if (extension != ".dll" && extension != ".pdb")
                     {
                         continue;
                     }
