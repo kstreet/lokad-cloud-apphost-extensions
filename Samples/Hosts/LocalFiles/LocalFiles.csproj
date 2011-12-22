@@ -37,9 +37,6 @@
     <Reference Include="Lokad.Cloud.AppHost">
       <HintPath>..\..\..\packages\Lokad.Cloud.AppHost.0.4.3\lib\Lokad.Cloud.AppHost.dll</HintPath>
     </Reference>
-    <Reference Include="Lokad.Cloud.AppHost.Extensions.FileDeployments">
-      <HintPath>..\..\..\packages\Lokad.Cloud.AppHost.Extensions.FileDeployments.0.1.3\lib\Lokad.Cloud.AppHost.Extensions.FileDeployments.dll</HintPath>
-    </Reference>
     <Reference Include="Lokad.Cloud.AppHost.Framework">
       <HintPath>..\..\..\packages\Lokad.Cloud.AppHost.Framework.0.4.3\lib\Lokad.Cloud.AppHost.Framework.dll</HintPath>
     </Reference>
@@ -61,6 +58,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Source\FileDeployments\FileDeployments.csproj">
+      <Project>{62C0F5E8-89CB-4593-9090-5D33C6497690}</Project>
+      <Name>FileDeployments</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
