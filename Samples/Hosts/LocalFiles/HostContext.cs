@@ -40,7 +40,7 @@ namespace LocalFiles
 
         public string GetLocalResourcePath(string resourceName)
         {
-            var path = Path.Combine(Environment.CurrentDirectory, "Temp", resourceName);
+            var path = Path.Combine(Path.GetTempPath(), "LokadAppHost", resourceName);
             Directory.CreateDirectory(path);
             return path;
         }
