@@ -16,25 +16,9 @@ namespace LocalFiles
 {
     class Program
     {
-        readonly CancellationTokenSource _cts;
-        readonly Host _host;
-
         static void Main()
         {
-            var appHost = new Program();
-
-            appHost.Start();
-
-            Console.ReadKey();
-            appHost.Stop();
-
-            Console.ReadKey();
-        }
-
-        public Program()
-        {
-            _cts = new CancellationTokenSource();
-
+            // Instrumentation & Logging
             var observer = new HostObserverSubject();
             observer.OfType<HostStartedEvent>().Subscribe(e => Console.WriteLine("AppHost started."));
             observer.OfType<HostStoppedEvent>().Subscribe(e => Console.WriteLine("AppHost stopped."));
@@ -43,22 +27,24 @@ namespace LocalFiles
             observer.OfType<CellExceptionRestartedEvent>().Subscribe(e => Console.WriteLine("Cell {0} exception: {1}", e.CellName, e.Exception));
             observer.OfType<CellFatalErrorRestartedEvent>().Subscribe(e => Console.WriteLine("Cell {0} fatal error: {1}", e.CellName, e.Exception));
 
-            var path = Path.Combine(Path.GetDirectoryName(typeof(Program).Assembly.Location), @"..\..\Deployment");
-            var deploymentReader = new FileDeploymentReader(path);
+            // Deployments
+            var deploymentPath = Path.Combine(Path.GetDirectoryName(typeof(Program).Assembly.Location), @"..\..\Deployment");
+            var deploymentReader = new FileDeploymentReader(deploymentPath);
 
+            // Host
             var context = new HostContext(observer, deploymentReader);
+            var host = new Host(context);
 
-            _host = new Host(context);
-        }
+            // START
+            var cts = new CancellationTokenSource();
+            host.Run(cts.Token);
 
-        public void Start()
-        {
-            _host.Run(_cts.Token);
-        }
+            Console.ReadKey();
 
-        public void Stop()
-        {
-            _cts.Cancel();
+            // STOP
+            cts.Cancel();
+
+            Console.ReadKey();
         }
     }
 }
