@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using Lokad.Cloud.AppHost.Framework;
+using Lokad.Cloud.AppHost.Framework.Definition;
 
 namespace Lokad.Cloud.AppHost.Extensions.FileDeployments
 {
@@ -25,7 +26,7 @@ namespace Lokad.Cloud.AppHost.Extensions.FileDeployments
             _basePath = basePath;
         }
 
-        public XElement GetHeadIfModified(string knownETag, out string newETag)
+        public SolutionHead GetDeploymentIfModified(string knownETag, out string newETag)
         {
             var file = new FileInfo(Path.Combine(_basePath, DeploymentHeadFileName));
             if (!file.Exists)
@@ -33,26 +34,26 @@ namespace Lokad.Cloud.AppHost.Extensions.FileDeployments
                 newETag = null;
                 return null;
             }
-            
+
             newETag = file.LastWriteTimeUtc.Ticks.ToString();
             if (knownETag != null && knownETag == newETag)
             {
                 return null;
             }
 
-            var deploymentName = File.ReadAllText(file.FullName).Trim();
-            return new XElement("Head", new XElement("Deployment", new XAttribute("name", deploymentName)));
+            var deploymentId = File.ReadAllText(file.FullName).Trim();
+            return new SolutionHead(deploymentId);
         }
 
-        public XElement GetDeployment(string deploymentName)
+        public SolutionDefinition GetSolution(SolutionHead deployment)
         {
-            var deploymentDirectory = new DirectoryInfo(Path.Combine(_basePath, deploymentName));
+            var deploymentDirectory = new DirectoryInfo(Path.Combine(_basePath, deployment.SolutionId));
             if (!deploymentDirectory.Exists)
             {
                 return null;
             }
 
-            var cells = new XElement("Cells");
+            var cells = new List<CellDefinition>();
             foreach (var cellDirectory in deploymentDirectory.EnumerateDirectories())
             {
                 var entryPointFile = new FileInfo(Path.Combine(cellDirectory.FullName, EntryPointFileName));
@@ -63,36 +64,29 @@ namespace Lokad.Cloud.AppHost.Extensions.FileDeployments
                     continue;
                 }
 
-                var entryPoint = File.ReadAllText(entryPointFile.FullName).Trim();
-                var cell = new XElement("Cell",
-                    new XAttribute("name", cellDirectory.Name),
-                    new XElement("Assemblies", new XAttribute("name", string.Format("{0}{1}{2}", deploymentName, Path.DirectorySeparatorChar, cellDirectory.Name))),
-                    new XElement("EntryPoint", new XAttribute("typeName", entryPoint)));
-
                 var settingsFile = new FileInfo(Path.Combine(cellDirectory.FullName, SettingsFileName));
-                if (settingsFile.Exists)
-                {
-                    cell.Add(XDocument.Load(settingsFile.FullName).Root);
-                }
-
-                cells.Add(cell);
+                cells.Add(new CellDefinition(
+                    cellDirectory.Name,
+                    new AssembliesHead(string.Format("{0}{1}{2}", deployment.SolutionId, Path.DirectorySeparatorChar, cellDirectory.Name)),
+                    File.ReadAllText(entryPointFile.FullName).Trim(),
+                    settingsFile.Exists ? File.ReadAllText(settingsFile.FullName) : null));
             }
 
-            return new XElement("Deployment", cells);
+            return new SolutionDefinition("Solution", cells.ToArray());
         }
 
-        public IEnumerable<Tuple<string, byte[]>> GetAssembliesAndSymbols(string assembliesName)
+        public IEnumerable<AssemblyData> GetAssembliesAndSymbols(AssembliesHead assemblies)
         {
-            var cellDirectory = new DirectoryInfo(Path.Combine(_basePath, assembliesName));
+            var cellDirectory = new DirectoryInfo(Path.Combine(_basePath, assemblies.AssembliesId));
             if (!cellDirectory.Exists)
             {
-                return new Tuple<string, byte[]>[0];
+                return new AssemblyData[0];
             }
 
             return cellDirectory.EnumerateFiles("*.dll")
                 .Concat(cellDirectory.EnumerateFiles("*.exe"))
                 .Concat(cellDirectory.EnumerateFiles("*.pdb"))
-                .Select(f => new Tuple<string, byte[]>(f.Name, File.ReadAllBytes(f.FullName)));
+                .Select(f => new AssemblyData(f.Name, File.ReadAllBytes(f.FullName)));
         }
 
         public T GetItem<T>(string itemName) where T : class

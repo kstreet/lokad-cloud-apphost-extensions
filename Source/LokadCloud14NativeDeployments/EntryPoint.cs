@@ -17,7 +17,7 @@ namespace LokadCloud14.NativeDeployments
             throw new NotImplementedException();
         }
 
-        public void ApplyChangedSettings(XElement settings)
+        public void OnSettingsChanged(XElement settings)
         {
             throw new NotImplementedException();
         }

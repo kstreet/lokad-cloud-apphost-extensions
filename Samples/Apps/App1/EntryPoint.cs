@@ -22,22 +22,22 @@ namespace App1
 
         public void Run(XElement settings, IDeploymentReader deploymentReader, IApplicationEnvironment environment, CancellationToken cancellationToken)
         {
-            _log.WriteLine("[App1] {0} {1}: Started {2}", environment.CurrentDeploymentName, environment.CellName, DateTime.Now);
+            _log.WriteLine("[App1] {0}-{1} on {2}: Started {3}", environment.Cell.SolutionName, environment.Cell.CellName, environment.Host.WorkerName, DateTime.Now);
             _log.Flush();
 
             while (!cancellationToken.IsCancellationRequested)
             {
-                _log.WriteLine("[App1] {0} {1}: Timestamp {2}", environment.CurrentDeploymentName, environment.CellName, DateTime.Now);
+                _log.WriteLine("[App1] {0}-{1} on {2}: Timestamp {3}", environment.Cell.SolutionName, environment.Cell.CellName, environment.Host.WorkerName, DateTime.Now);
                 _log.Flush();
 
                 cancellationToken.WaitHandle.WaitOne(5000);
             }
 
-            _log.WriteLine("[App1] {0} {1}: Stopped {2}", environment.CurrentDeploymentName, environment.CellName, DateTime.Now);
+            _log.WriteLine("[App1] {0}-{1} on {2}: Stopped {3}", environment.Cell.SolutionName, environment.Cell.CellName, environment.Host.WorkerName, DateTime.Now);
             _log.Flush();
         }
 
-        public void ApplyChangedSettings(XElement settings)
+        public void OnSettingsChanged(XElement settings)
         {
             _log.WriteLine("[App1] SettingsChanged: {0}", settings);
             _log.Flush();

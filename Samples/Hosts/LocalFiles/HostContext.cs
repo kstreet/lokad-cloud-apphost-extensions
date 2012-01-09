@@ -8,33 +8,30 @@ using System.IO;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Lokad.Cloud.AppHost.Framework;
+using Lokad.Cloud.AppHost.Framework.Definition;
 
 namespace LocalFiles
 {
     public class HostContext : IHostContext
     {
-        private readonly string _instanceName;
+        private readonly HostLifeIdentity _identity;
 
         public HostContext(IHostObserver hostObserver, IDeploymentReader deploymentReader)
         {
             Observer = hostObserver;
             DeploymentReader = deploymentReader;
-            _instanceName = Guid.NewGuid().ToString("N");
+
+            _identity = new HostLifeIdentity(Environment.MachineName, Guid.NewGuid().ToString("N"));
         }
 
-        public string WorkerName
+        public HostLifeIdentity Identity
         {
-            get { return Environment.MachineName; }
+            get { return _identity; }
         }
 
-        public string UniqueWorkerInstanceName
+        public CellLifeIdentity GetNewCellLifeIdentity(string solutionName, string cellName, SolutionHead deployment)
         {
-            get { return _instanceName; }
-        }
-
-        public string GetNewUniqueCellInstanceName(string deploymentName, string cellName)
-        {
-            return Guid.NewGuid().ToString("N");
+            return new CellLifeIdentity(_identity, solutionName, cellName, Guid.NewGuid().ToString("N"));
         }
 
         public string GetSettingValue(string settingName)
@@ -49,7 +46,7 @@ namespace LocalFiles
 
         public string GetLocalResourcePath(string resourceName)
         {
-            var path = Path.Combine(Path.GetTempPath(), "LokadAppHost", _instanceName, resourceName);
+            var path = Path.Combine(Path.GetTempPath(), "LokadAppHost", _identity.UniqueWorkerInstanceName, resourceName);
             Directory.CreateDirectory(path);
             return path;
         }

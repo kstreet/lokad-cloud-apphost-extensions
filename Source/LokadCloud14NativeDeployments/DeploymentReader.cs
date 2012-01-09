@@ -10,6 +10,7 @@ using System.Runtime.Serialization;
 using System.Xml.Linq;
 using Ionic.Zip;
 using Lokad.Cloud.AppHost.Framework;
+using Lokad.Cloud.AppHost.Framework.Definition;
 using Lokad.Cloud.Storage;
 
 namespace LokadCloud14.NativeDeployments
@@ -38,7 +39,7 @@ namespace LokadCloud14.NativeDeployments
             _storage = CloudStorage.ForAzureConnectionString(_storageConnectionString).BuildStorageProviders();
         }
 
-        public XElement GetHeadIfModified(string knownETag, out string newETag)
+        public SolutionHead GetDeploymentIfModified(string knownETag, out string newETag)
         {
             newETag = CombineEtags(
                 _storage.BlobStorage.GetBlobEtag(ContainerName, PackageBlobName),
@@ -49,23 +50,25 @@ namespace LokadCloud14.NativeDeployments
                 return null;
             }
 
-            return new XElement("Head", new XElement("Deployment", new XAttribute("name", newETag)));
+            return new SolutionHead(newETag);
         }
 
-        public XElement GetDeployment(string deploymentName)
+        public SolutionDefinition GetSolution(SolutionHead deployment)
         {
-            return new XElement("Deployment", new XElement("Cells",
-                new XElement("Cell",
-                    new XAttribute("name", deploymentName),
-                    new XElement("Assemblies", new XAttribute("name", PackageEtagOfCombinedEtag(deploymentName))),
-                    new XElement("EntryPoint", new XAttribute("typeName", "LokadCloud14.NativeDeployments.EntryPoint, LokadCloud14.NativeDeployments")))));
+            return new SolutionDefinition("Solution", new CellDefinition[]
+                {
+                    new CellDefinition("Cell",
+                        new AssembliesHead(PackageEtagOfCombinedEtag(deployment.SolutionId)),
+                        "LokadCloud14.NativeDeployments.EntryPoint, LokadCloud14.NativeDeployments",
+                        null)
+                });
         }
 
-        public IEnumerable<Tuple<string, byte[]>> GetAssembliesAndSymbols(string assembliesName)
+        public IEnumerable<AssemblyData> GetAssembliesAndSymbols(AssembliesHead assemblies)
         {
             string packageEtag;
             var packageBlob = _storage.BlobStorage.GetBlob<byte[]>(ContainerName, PackageBlobName, out packageEtag);
-            if (!packageBlob.HasValue || packageEtag != assembliesName)
+            if (!packageBlob.HasValue || packageEtag != assemblies.AssembliesId)
             {
                 yield break;
             }
@@ -89,7 +92,7 @@ namespace LokadCloud14.NativeDeployments
                     using(var stream = new MemoryStream())
                     {
                         entry.Extract(stream);
-                        yield return new Tuple<string, byte[]>(Path.GetFileName(entry.FileName), stream.ToArray());
+                        yield return new AssemblyData(Path.GetFileName(entry.FileName), stream.ToArray());
                     }
                 }
             }

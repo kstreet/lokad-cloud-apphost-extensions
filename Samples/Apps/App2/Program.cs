@@ -33,12 +33,12 @@ namespace App2
             var log = File.AppendText("app2_log.txt");
             Run(cancellationToken, logtext =>
                 {
-                    log.WriteLine("[App1] {0} {1}: {2}", environment.CurrentDeploymentName, environment.CellName, logtext);
+                    log.WriteLine("[App1] {0}-{1} on {2}: {3}", environment.Cell.SolutionName, environment.Cell.CellName, environment.Host.WorkerName, logtext);
                     log.Flush();
                 });
         }
 
-        void IApplicationEntryPoint.ApplyChangedSettings(XElement settings)
+        void IApplicationEntryPoint.OnSettingsChanged(XElement settings)
         {
         }
 
