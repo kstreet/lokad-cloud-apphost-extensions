@@ -51,11 +51,12 @@ namespace Lokad.Cloud.AppHost.Extensions.SimpleFileDeployment
                 return null;
             }
 
+            var interfaceWeAreLookingFor = typeof (IApplicationEntryPoint).FullName;
             var entryPointType = Directory.EnumerateFiles(_basePath, "*.dll", SearchOption.AllDirectories)
                 .Concat(Directory.EnumerateFiles(_basePath, "*.exe", SearchOption.AllDirectories))
                 .Select(AssemblyDefinition.ReadAssembly)
                 .SelectMany(a => a.MainModule.Types)
-                .FirstOrDefault(t => t.Interfaces.Any(i => i.FullName == "Lokad.Cloud.AppHost.Framework.IApplicationEntryPoint"));
+                .FirstOrDefault(t => t.Interfaces.Any(i => i.FullName == interfaceWeAreLookingFor));
 
             if (entryPointType == null)
             {
