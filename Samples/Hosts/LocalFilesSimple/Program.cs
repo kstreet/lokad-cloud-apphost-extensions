@@ -26,7 +26,7 @@ namespace LocalFilesSimple
 
             // Host
             var context = new HostContext(observer, deploymentReader);
-            var host = new Host(context);
+            var host = new Host(context, 5000);
 
             // START
             var cts = new CancellationTokenSource();

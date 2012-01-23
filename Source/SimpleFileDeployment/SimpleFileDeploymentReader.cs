@@ -28,6 +28,7 @@ namespace Lokad.Cloud.AppHost.Extensions.SimpleFileDeployment
             _watcher = new FileSystemWatcher(basePath);
             _watcher.Changed += (sender, args) => Interlocked.Increment(ref _filesVersion);
             _watcher.Created += (sender, args) => Interlocked.Increment(ref _filesVersion);
+            _watcher.Renamed += (sender, args) => Interlocked.Increment(ref _filesVersion);
             _watcher.EnableRaisingEvents = true;
         }
 
