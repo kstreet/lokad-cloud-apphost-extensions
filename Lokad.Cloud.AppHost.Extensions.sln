@@ -24,6 +24,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LokadCloud14.NativeDeployme
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LokadCloud14.NativeHost", "Samples\Hosts\LokadCloud14Native\LokadCloud14.NativeHost.csproj", "{4CB17EBC-4985-4AE8-9896-1618D1BCC8B6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleFileDeployment", "Source\SimpleFileDeployment\SimpleFileDeployment.csproj", "{8D9A7669-2687-42FD-B983-0B350550D7E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalFilesSimple", "Samples\Hosts\LocalFilesSimple\LocalFilesSimple.csproj", "{460CDD24-C414-4B01-8E1B-B317809B5AD6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -94,6 +98,26 @@ Global
 		{4CB17EBC-4985-4AE8-9896-1618D1BCC8B6}.Release|Mixed Platforms.Build.0 = Release|x86
 		{4CB17EBC-4985-4AE8-9896-1618D1BCC8B6}.Release|x86.ActiveCfg = Release|x86
 		{4CB17EBC-4985-4AE8-9896-1618D1BCC8B6}.Release|x86.Build.0 = Release|x86
+		{8D9A7669-2687-42FD-B983-0B350550D7E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D9A7669-2687-42FD-B983-0B350550D7E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D9A7669-2687-42FD-B983-0B350550D7E0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{8D9A7669-2687-42FD-B983-0B350550D7E0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{8D9A7669-2687-42FD-B983-0B350550D7E0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8D9A7669-2687-42FD-B983-0B350550D7E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D9A7669-2687-42FD-B983-0B350550D7E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D9A7669-2687-42FD-B983-0B350550D7E0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{8D9A7669-2687-42FD-B983-0B350550D7E0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{8D9A7669-2687-42FD-B983-0B350550D7E0}.Release|x86.ActiveCfg = Release|Any CPU
+		{460CDD24-C414-4B01-8E1B-B317809B5AD6}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{460CDD24-C414-4B01-8E1B-B317809B5AD6}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{460CDD24-C414-4B01-8E1B-B317809B5AD6}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{460CDD24-C414-4B01-8E1B-B317809B5AD6}.Debug|x86.ActiveCfg = Debug|x86
+		{460CDD24-C414-4B01-8E1B-B317809B5AD6}.Debug|x86.Build.0 = Debug|x86
+		{460CDD24-C414-4B01-8E1B-B317809B5AD6}.Release|Any CPU.ActiveCfg = Release|x86
+		{460CDD24-C414-4B01-8E1B-B317809B5AD6}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{460CDD24-C414-4B01-8E1B-B317809B5AD6}.Release|Mixed Platforms.Build.0 = Release|x86
+		{460CDD24-C414-4B01-8E1B-B317809B5AD6}.Release|x86.ActiveCfg = Release|x86
+		{460CDD24-C414-4B01-8E1B-B317809B5AD6}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -105,5 +129,6 @@ Global
 		{C2089238-D0CF-4CF6-8B84-C501964DD14F} = {61F9A35F-2036-4FE7-BFA4-4D0B673BF63E}
 		{EF66D6AE-F5E1-4109-845F-90243AAA38F4} = {6B8886C5-D83B-4895-845A-598DE79AD2C3}
 		{4CB17EBC-4985-4AE8-9896-1618D1BCC8B6} = {6B8886C5-D83B-4895-845A-598DE79AD2C3}
+		{460CDD24-C414-4B01-8E1B-B317809B5AD6} = {6B8886C5-D83B-4895-845A-598DE79AD2C3}
 	EndGlobalSection
 EndGlobal

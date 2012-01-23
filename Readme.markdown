@@ -36,6 +36,14 @@ File Structure:
   * **otherDeploymentName/**:  
     Directory of another deployment, named "otherDeploymentName"
 
+Simple File Deployment
+----------------------
+
+Even simpler version of file deployments:
+  * Only one deployment (can therefore only load "current" deployment, no rollback; change detection using FileSystemWatcher)
+  * Only one cell
+  * No configuration at all, EntryPoint is discovered automatically using Cecil
+
 
 Samples
 =======
