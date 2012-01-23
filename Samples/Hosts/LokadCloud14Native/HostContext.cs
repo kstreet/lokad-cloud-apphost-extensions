@@ -4,6 +4,7 @@
 #endregion
 
 using System;
+using System.Configuration;
 using System.IO;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
@@ -17,11 +18,12 @@ namespace LokadCloud14.NativeHost
     {
         private readonly HostLifeIdentity _identity;
 
-        public HostContext(IHostObserver hostObserver, IDeploymentReader deploymentReader)
+        public HostContext(IDeploymentReader deploymentReader, IHostObserver observer)
         {
-            Observer = hostObserver;
+            Observer = observer;
             DeploymentReader = deploymentReader;
 
+            // TODO: Replace GUID with global blob counter
             _identity = new HostLifeIdentity(Environment.MachineName, Guid.NewGuid().ToString("N"));
         }
 
@@ -32,24 +34,40 @@ namespace LokadCloud14.NativeHost
 
         public CellLifeIdentity GetNewCellLifeIdentity(string solutionName, string cellName, SolutionHead deployment)
         {
+            // TODO: Replace GUID with global blob counter
             return new CellLifeIdentity(_identity, solutionName, cellName, Guid.NewGuid().ToString("N"));
         }
 
         public string GetSettingValue(CellLifeIdentity cell, string settingName)
         {
-            return null;
+            return ConfigurationManager.AppSettings[settingName];
         }
 
         public X509Certificate2 GetCertificate(CellLifeIdentity cell, string thumbprint)
         {
-            return null;
+            var store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+            try
+            {
+                store.Open(OpenFlags.ReadOnly);
+                var certs = store.Certificates.Find(X509FindType.FindByThumbprint, thumbprint, false);
+                if (certs.Count != 1)
+                {
+                    return null;
+                }
+
+                return certs[0];
+            }
+            finally
+            {
+                store.Close();
+            }
         }
 
         public string GetLocalResourcePath(CellLifeIdentity cell, string resourceName)
         {
-            var path = Path.Combine(Path.GetTempPath(), "LokadAppHost", _identity.UniqueWorkerInstanceName, resourceName);
-            Directory.CreateDirectory(path);
-            return path;
+            var dir = Path.Combine(Path.GetTempPath(), _identity.UniqueWorkerInstanceName, cell.UniqueCellInstanceName, resourceName);
+            Directory.CreateDirectory(dir);
+            return dir;
         }
 
         public IPEndPoint GetEndpoint(CellLifeIdentity cell, string endpointName)

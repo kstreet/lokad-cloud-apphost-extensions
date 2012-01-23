@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
+using System.Xml.Linq;
 using Ionic.Zip;
 using Lokad.Cloud.AppHost.Framework;
 using Lokad.Cloud.AppHost.Framework.Definition;
@@ -21,21 +22,21 @@ namespace LokadCloud14.NativeDeployments
         private const string PackageBlobName = "default";
         private const string ConfigBlobName = "config";
 
-        private readonly string _storageConnectionString;
+        private readonly string _connectionString;
+
+        public DeploymentReader(string connectionString)
+        {
+            _connectionString = connectionString;
+            _storage = CloudStorage.ForAzureConnectionString(connectionString).BuildStorageProviders();
+        }
 
         [NonSerialized]
         private CloudStorageProviders _storage;
 
-        public DeploymentReader(string storageConnectionString)
-        {
-            _storageConnectionString = storageConnectionString;
-            _storage = CloudStorage.ForAzureConnectionString(storageConnectionString).BuildStorageProviders();
-        }
-
         [OnDeserialized]
         private void OnDeserialized(StreamingContext context)
         {
-            _storage = CloudStorage.ForAzureConnectionString(_storageConnectionString).BuildStorageProviders();
+            _storage = CloudStorage.ForAzureConnectionString(_connectionString).BuildStorageProviders();
         }
 
         public SolutionHead GetDeploymentIfModified(string knownETag, out string newETag)
@@ -54,12 +55,49 @@ namespace LokadCloud14.NativeDeployments
 
         public SolutionDefinition GetSolution(SolutionHead deployment)
         {
-            return new SolutionDefinition("Solution", new CellDefinition[]
+            var settings = new XElement("Settings",
+                    new XElement("DataConnectionString", _connectionString));
+
+            string entryPointTypeName = null;
+            string configEtag;
+            var appConfig = _storage.BlobStorage.GetBlob<byte[]>(ContainerName, ConfigBlobName, out configEtag);
+            if (appConfig.HasValue && configEtag == ConfigEtagOfCombinedEtag(deployment.SolutionId))
+            {
+                // add raw config to settings (Base64)
+                settings.Add(new XElement("RawConfig", Convert.ToBase64String(appConfig.Value)));
+
+                // directly insert config xml root as element, if possible
+                try
+                {
+                    using (var configStream = new MemoryStream(appConfig.Value))
+                    {
+                        var configDoc = XDocument.Load(configStream);
+                        if (configDoc != null && configDoc.Root != null)
+                        {
+                            settings.Add(configDoc.Root);
+
+                            // if root contains "EntryPoint" element with "typeName" attribute, use it as entry point
+                            var entryPointXml = configDoc.Root.Element("EntryPoint");
+                            XAttribute typeNameXml;
+                            if (entryPointXml != null && (typeNameXml = entryPointXml.Attribute("typeName")) != null && !String.IsNullOrWhiteSpace(typeNameXml.Value))
+                            {
+                                entryPointTypeName = typeNameXml.Value.Trim();
+                            }
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    // don't care, unfortunately there's no TryLoad
+                }
+            }
+
+            return new SolutionDefinition("Solution", new[]
                 {
                     new CellDefinition("Cell",
                         new AssembliesHead(PackageEtagOfCombinedEtag(deployment.SolutionId)),
-                        "LokadCloud14.NativeDeployments.EntryPoint, LokadCloud14.NativeDeployments",
-                        null)
+                        entryPointTypeName ?? "Lokad.Cloud.Autofac.ApplicationEntryPoint, Lokad.Cloud.Autofac",
+                        settings.ToString())
                 });
         }
 
@@ -88,7 +126,7 @@ namespace LokadCloud14.NativeDeployments
                         continue;
                     }
 
-                    using(var stream = new MemoryStream())
+                    using (var stream = new MemoryStream())
                     {
                         entry.Extract(stream);
                         yield return new AssemblyData(Path.GetFileName(entry.FileName), stream.ToArray());
@@ -122,7 +160,19 @@ namespace LokadCloud14.NativeDeployments
                 return null;
             }
 
-            return combinedEtag.Substring(4, Int32.Parse(combinedEtag.Substring(0, 4)));
+            var packageEtag = combinedEtag.Substring(4, Int32.Parse(combinedEtag.Substring(0, 4)));
+            return string.IsNullOrEmpty(packageEtag) ? null : packageEtag;
+        }
+
+        static string ConfigEtagOfCombinedEtag(string combinedEtag)
+        {
+            if (combinedEtag == null || combinedEtag.Length <= 5)
+            {
+                return null;
+            }
+
+            var configEtag = combinedEtag.Substring(4 + Int32.Parse(combinedEtag.Substring(0, 4)));
+            return string.IsNullOrEmpty(configEtag) ? null : configEtag;
         }
     }
 }
