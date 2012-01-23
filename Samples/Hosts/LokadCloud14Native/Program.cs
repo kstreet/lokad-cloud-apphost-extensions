@@ -4,12 +4,11 @@
 #endregion
 
 using System;
-using System.IO;
 using System.Reactive.Linq;
 using System.Threading;
 using Lokad.Cloud.AppHost;
-using Lokad.Cloud.AppHost.Framework;
-using Lokad.Cloud.AppHost.Framework.Events;
+using Lokad.Cloud.AppHost.Framework.Instrumentation;
+using Lokad.Cloud.AppHost.Framework.Instrumentation.Events;
 using LokadCloud14.NativeDeployments;
 
 namespace LokadCloud14.NativeHost

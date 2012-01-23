@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
-using System.Xml.Linq;
 using Ionic.Zip;
 using Lokad.Cloud.AppHost.Framework;
 using Lokad.Cloud.AppHost.Framework.Definition;

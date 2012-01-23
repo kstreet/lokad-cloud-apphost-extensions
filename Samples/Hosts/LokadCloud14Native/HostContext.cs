@@ -9,6 +9,7 @@ using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Lokad.Cloud.AppHost.Framework;
 using Lokad.Cloud.AppHost.Framework.Definition;
+using Lokad.Cloud.AppHost.Framework.Instrumentation;
 
 namespace LokadCloud14.NativeHost
 {
@@ -34,24 +35,24 @@ namespace LokadCloud14.NativeHost
             return new CellLifeIdentity(_identity, solutionName, cellName, Guid.NewGuid().ToString("N"));
         }
 
-        public string GetSettingValue(string settingName)
+        public string GetSettingValue(CellLifeIdentity cell, string settingName)
         {
             return null;
         }
 
-        public X509Certificate2 GetCertificate(string thumbprint)
+        public X509Certificate2 GetCertificate(CellLifeIdentity cell, string thumbprint)
         {
             return null;
         }
 
-        public string GetLocalResourcePath(string resourceName)
+        public string GetLocalResourcePath(CellLifeIdentity cell, string resourceName)
         {
             var path = Path.Combine(Path.GetTempPath(), "LokadAppHost", _identity.UniqueWorkerInstanceName, resourceName);
             Directory.CreateDirectory(path);
             return path;
         }
 
-        public IPEndPoint GetEndpoint(string endpointName)
+        public IPEndPoint GetEndpoint(CellLifeIdentity cell, string endpointName)
         {
             return null;
         }
