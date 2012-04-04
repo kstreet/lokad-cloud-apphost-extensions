@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ServiceDefinition name="AzureCloud.Deploy" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition">
+  <WorkerRole name="AzureCloud.Worker" vmsize="Small">
+    <Imports>
+    </Imports>
+    <ConfigurationSettings>
+      <Setting name="DeploymentContainer" />
+      <Setting name="DeploymentAccount" />
+    </ConfigurationSettings>
+  </WorkerRole>
+</ServiceDefinition>

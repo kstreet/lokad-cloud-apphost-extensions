@@ -18,9 +18,9 @@ namespace LokadCloud14.NativeDeployments
     [Serializable]
     public class DeploymentReader : IDeploymentReader
     {
-        private const string ContainerName = "lokad-cloud-assemblies";
-        private const string PackageBlobName = "default";
-        private const string ConfigBlobName = "config";
+        public string ContainerName = "lokad-cloud-assemblies";
+        public string PackageBlobName = "default";
+        public string ConfigBlobName = "config";
 
         private readonly string _connectionString;
 

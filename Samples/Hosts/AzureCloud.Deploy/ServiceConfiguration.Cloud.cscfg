@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ServiceConfiguration serviceName="AzureCloud.Deploy" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="1" osVersion="*">
+  <Role name="AzureCloud.Worker">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="DeploymentContainer" value="lokad-cloud" />
+      <Setting name="DeploymentAccount" value="UseDevelopmentStorage=true" />
+    </ConfigurationSettings>
+  </Role>
+</ServiceConfiguration>
