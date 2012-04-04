@@ -6,6 +6,7 @@
     <ConfigurationSettings>
       <Setting name="DeploymentContainer" />
       <Setting name="DeploymentAccount" />
+      <Setting name="DefaultEntryPoint" />
     </ConfigurationSettings>
   </WorkerRole>
 </ServiceDefinition>

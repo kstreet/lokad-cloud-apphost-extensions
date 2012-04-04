@@ -5,6 +5,7 @@
     <ConfigurationSettings>
       <Setting name="DeploymentContainer" value="lokad-cloud" />
       <Setting name="DeploymentAccount" value="UseDevelopmentStorage=true" />
+      <Setting name="DefaultEntryPoint" value="App1.EntryPoint, App1" />
     </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>

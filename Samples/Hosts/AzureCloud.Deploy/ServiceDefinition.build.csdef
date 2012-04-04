@@ -8,4 +8,13 @@
 
   **********************************************************************************************
 -->
-<ServiceDefinition name="AzureCloud.Deploy" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition"></ServiceDefinition>
+<ServiceDefinition name="AzureCloud.Deploy" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition">
+  <WorkerRole name="AzureCloud.Worker" vmsize="Small">
+    <Imports></Imports>
+    <ConfigurationSettings>
+      <Setting name="DeploymentContainer" />
+      <Setting name="DeploymentAccount" />
+      <Setting name="DefaultEntryPoint" />
+    </ConfigurationSettings>
+  </WorkerRole>
+</ServiceDefinition>

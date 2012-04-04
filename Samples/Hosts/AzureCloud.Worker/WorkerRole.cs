@@ -1,14 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Threading;
 using Lokad.Cloud.AppHost;
 using Lokad.Cloud.AppHost.Framework.Instrumentation;
-using LokadCloud14.NativeDeployments;
 using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using Microsoft.WindowsAzure.StorageClient;
 
@@ -48,7 +45,8 @@ namespace AzureCloud.Worker
                 {
                     ContainerName = AzureSettingsProvider.GetStringOrNull("DeploymentContainer") ?? "lokad-deployment",
                     ConfigBlobName = AzureSettingsProvider.GetStringOrNull("ConfigName") ?? "config.txt",
-                    PackageBlobName = AzureSettingsProvider.GetStringOrNull("PackageFile") ?? "package.txt"
+                    PackageBlobName = AzureSettingsProvider.GetStringOrNull("PackageFile") ?? "package.txt",
+                    DefaultEntryPoint = AzureSettingsProvider.GetStringOrNull("DefaultEntryPoint") ?? "App1.EntryPoint, App1"
                 };
             
             Context = new HostContext(reader, observer);

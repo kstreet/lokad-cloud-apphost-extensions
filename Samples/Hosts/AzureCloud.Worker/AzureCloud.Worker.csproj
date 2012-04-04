@@ -32,35 +32,27 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ionic.Zip.Reduced, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL" />
     <Reference Include="Lokad.Cloud.AppHost">
       <HintPath>..\..\..\packages\Lokad.Cloud.AppHost.0.8.1\lib\Lokad.Cloud.AppHost.dll</HintPath>
     </Reference>
     <Reference Include="Lokad.Cloud.AppHost.Framework">
       <HintPath>..\..\..\packages\Lokad.Cloud.AppHost.Framework.0.8.1\lib\Lokad.Cloud.AppHost.Framework.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="Microsoft.WindowsAzure.StorageClient, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AzureSettingsProvider.cs" />
+    <Compile Include="DeploymentReader.cs" />
     <Compile Include="HostContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WorkerRole.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Source\LokadCloud14NativeDeployments\LokadCloud14.NativeDeployments.csproj">
-      <Project>{65EE4C32-A66F-4FF0-9F13-952B7AA424AC}</Project>
-      <Name>LokadCloud14.NativeDeployments</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
